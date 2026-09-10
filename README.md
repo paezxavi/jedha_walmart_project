@@ -24,9 +24,9 @@ question behind the brief is still no:
 
 `Walmart_Store_sales.csv` — 150 rows, one per store-week, 20 stores, February 2010 to October
 2012. A custom extract from the Kaggle Walmart competition, deliberately perforated: **half the
-rows have at least one missing value**, spread evenly across all eight columns at 8-12% each. Only
-75 rows are complete, so `dropna()` on the table is not an option and every column is handled by
-what it is.
+rows have at least one missing value**, spread evenly across seven of the eight columns at 8-12%
+each — `Store` is the only one with nothing missing. Only 75 rows are complete, so `dropna()` on
+the table is not an option and every column is handled by what it is.
 
 The four preprocessing rules the brief imposes leave **113 usable rows over 19 stores**, and two of
 them cost more than they look — see below.
