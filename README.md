@@ -35,9 +35,9 @@ them cost more than they look — see below.
 
 ### The store is the model
 
-Mean weekly sales run from **294 k$ (store 5) to 2.17 M$ (store 4)**, a factor of 7 — as wide as
-the entire spread of the target. Cross-validating one feature group at a time settles what the
-model is actually using:
+Mean weekly sales run from **294 k$ (store 5) to 2.17 M$ (store 4)**, a factor of 7 — three
+quarters of the entire spread of the target. Cross-validating one feature group at a time settles
+what the model is actually using:
 
 | features | CV R² |
 |---|---|
@@ -57,14 +57,14 @@ In the fitted model the same thing shows up in the coefficients: the store dummi
 
 ![Mean weekly sales by store](images/2_sales_by_store.png)
 
-### CPI is not an economic variable here, it is a store label
+### CPI is not an economic variable here, it is a store attribute
 
 `CPI` has the strongest correlation with sales (**−0.36**) and the largest non-store coefficient,
 which makes it look like the one indicator that works. **99.4% of its variance separates stores
-rather than weeks**: each store sits in its own region, each region has its own price index, and
-across two and a half years that index moves 6.3 points inside a store against a 101-point range
-across the file. Its scatter plot gives it away — three separate clusters, one per group of
-regions, with empty space between them.
+rather than weeks**: a store's index is a constant it carries, moving 6.3 points across two and a
+half years against a 101-point range across the file. A CPI is a regional price index, so the
+split is presumably geographic — the file carries no location column to confirm it. Its scatter
+plot gives it away — three separate clusters of stores with empty space between them.
 
 `Unemployment` has the same problem at 75%. Only `Temperature` (35%) and `Fuel_Price` (23%) are
 genuinely week-to-week quantities, and neither correlates with sales.
@@ -85,7 +85,7 @@ single split's ranking is noise.
 
 ![Test R² over 40 splits](images/5_model_comparison.png)
 
-The reason is the previous section: 19 of the 27 features are store dummies, and a store dummy is
+The reason is the previous section: 18 of the 27 features are store dummies, and a store dummy is
 close to a direct measurement of the answer rather than a noisy proxy a small sample might fit by
 accident. There is little spurious structure available to memorise.
 
@@ -93,8 +93,8 @@ accident. There is little spurious structure available to memorise.
 
 - **The ±3σ outlier filter deletes a store.** The only outliers in the four columns are five
   `Unemployment` values above 12.7% — and they are all store 12, which is every row store 12 has.
-  The rule removes a location in a high-unemployment county *because* its region is unusual, not
-  because anything was mismeasured. 20 stores become 19.
+  The rule removes a store whose unemployment rate is high in every one of its weeks, *because*
+  that store is unusual, not because anything was mismeasured. 20 stores become 19.
 - **`DayOfWeek` cannot carry information.** Every week in the file is dated on a Friday, so the
   fourth date feature the brief asks for has zero variance. It is kept as a live demonstration: its
   coefficient comes out at exactly `0`, and Lasso drops it first.
@@ -105,12 +105,14 @@ a plausible date for anything, so the rows went rather than be invented.
 ## What we told the marketing service
 
 The model can size what a given store should take in a given week — 152 k$ of average error against
-585 k$ for predicting the mean. It cannot tell them that a fuel-price or unemployment move will
-shift sales, and **that is a property of the file, not a failure of the model**: 113 weeks over 19
-stores is about six observations per store across two and a half years, and slow-moving indicators
-cannot be seen through a ±675 k$ spread on six points. The full Kaggle dataset this extract comes
-from has 45 stores × 143 weeks — 6 400 rows against 113 — and that is where a defensible answer
-about the economy would have to come from.
+585 k$ for predicting the mean. That holds for the 19 stores in the file and for no other: hold out
+whole stores instead of scattered weeks and the same model scores −0.877, because everything it
+knows is which store the week belongs to. It cannot tell them that a fuel-price or unemployment
+move will shift sales, and **that is a property of the file, not a failure of the model**: 113
+weeks over 19 stores is about six observations per store across two and a half years, and
+slow-moving indicators cannot be seen through a ±675 k$ spread on six points. The full Kaggle
+dataset this extract comes from has 45 stores × 143 weeks — 6 400 rows against 113 — and that is
+where a defensible answer about the economy would have to come from.
 
 ## Running it
 
@@ -126,9 +128,9 @@ project.
 Charts render as static images so the notebook stays readable on GitHub; the same PNGs are written
 to `images/`. If `kaleido` cannot find a browser, run `.venv/bin/plotly_get_chrome`.
 
-Everything is seeded on `RANDOM_STATE = 42`, so a re-run reproduces every number above. The
-40-split comparison in section 5 fits 160 models and takes about a minute; every other cell is
-instant.
+Everything is seeded — `RANDOM_STATE = 42` throughout, seeds 0 to 39 for the 40-split study — so a
+re-run reproduces every number above. That 40-split comparison in section 5 makes about 8 700
+model fits and takes about a minute; every other cell is instant.
 
 ## Layout
 

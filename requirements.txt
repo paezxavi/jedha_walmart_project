@@ -9,6 +9,9 @@ ipykernel==7.3.0            # Jupyter kernel for walmart_project.ipynb
 # --- Modelling ---
 scikit-learn==1.9.0         # ColumnTransformer / Pipeline, LinearRegression, Ridge, Lasso,
                             # GridSearchCV. root_mean_squared_error needs >= 1.4.
+scipy==1.18.1               # stats.ttest_ind for the holiday-flag test in section 3.3.
+                            # Already a scikit-learn dependency; pinned here because
+                            # the notebook imports it directly.
 
 # --- Visualisation ---
 plotly==7.0.0               # every chart in the notebook
