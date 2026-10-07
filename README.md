@@ -82,7 +82,8 @@ none.
 Repeating the whole comparison over 40 random splits shows why that is the right answer rather than
 a failure: the three models average **0.939, 0.938 and 0.937**, and each one's own spread (0.82 to
 0.98, standard deviation 0.03) is more than ten times the 0.002 that separates their means. Any
-single split's ranking is noise.
+single split's ranking is noise. The alpha re-tuned on each split tells the same story: median
+0.03, never above 0.31, out of a grid reaching 5 790.
 
 ![Test R² over 40 splits](images/5_model_comparison.png)
 
